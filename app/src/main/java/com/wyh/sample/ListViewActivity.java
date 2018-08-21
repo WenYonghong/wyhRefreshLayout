@@ -15,6 +15,7 @@ import com.wyh.refreshlayout.view.WyhRefreshLayout;
 public class ListViewActivity extends AppCompatActivity {
 
     private WyhRefreshLayout dwRefreshLayout;
+
     private ListView lv;
     private int x = 10;
     Handler mHandler = new Handler(Looper.getMainLooper());

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.wyh.refreshlayout.R;
 import com.wyh.refreshlayout.view.interf.IRefreshHead;
 import com.wyh.refreshlayout.view.utils.DensityUtils;
+import com.zyao89.view.zloading.ZLoadingView;
 
 /**
  * Created by: wyh
@@ -28,11 +29,10 @@ public class DefaultHeadView extends FrameLayout implements IRefreshHead {
     private int i = 0;
 
     private TextView mTvStatus;
-    private ProgressBar pbHead;
+    private ZLoadingView pbHead;
     private ImageView ivHead;
     private boolean p_d = false;
     private boolean p_d_b = false;
-    private boolean refreshBool = false;
     private LayoutParams mLayoutParams =
             new LayoutParams(LayoutParams.MATCH_PARENT, (int) DensityUtils.dipToPx(getContext(), 60));
     private int viewHeight;
@@ -53,7 +53,7 @@ public class DefaultHeadView extends FrameLayout implements IRefreshHead {
     private void initView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.default_headview, null);
         mTvStatus = (TextView) view.findViewById(R.id.tv_status);
-        pbHead = (ProgressBar) view.findViewById(R.id.pb_head);
+        pbHead = (ZLoadingView) view.findViewById(R.id.pb_head);
         ivHead = (ImageView) view.findViewById(R.id.iv_head);
         viewHeight = (int) DensityUtils.dipToPx(getContext(), 60);
         this.addView(view, mLayoutParams);
@@ -61,7 +61,6 @@ public class DefaultHeadView extends FrameLayout implements IRefreshHead {
 
     @Override
     public void onStart() {
-        refreshBool = false;
         ivHead.setBackgroundResource(R.drawable.jiantou);
         pbHead.setVisibility(INVISIBLE);
         mTvStatus.setText("下拉刷新");
@@ -105,8 +104,8 @@ public class DefaultHeadView extends FrameLayout implements IRefreshHead {
 
     @Override
     public void onFingerUp(int distance) {
-        if (!refreshBool) {
-            refreshBool = true;
+
+        if (distance >= viewHeight) {
             mTvStatus.setText("刷新中...");
             ivHead.setBackgroundColor(Color.parseColor("#00ffffff"));
             Animation animation = new RotateAnimation(180, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);

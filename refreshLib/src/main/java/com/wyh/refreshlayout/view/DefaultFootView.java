@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.wyh.refreshlayout.R;
 import com.wyh.refreshlayout.view.interf.ILoadMoreFoot;
 import com.wyh.refreshlayout.view.utils.DensityUtils;
+import com.zyao89.view.zloading.ZLoadingView;
 
 /**
  * Created by: wyh
@@ -27,11 +28,10 @@ import com.wyh.refreshlayout.view.utils.DensityUtils;
 public class DefaultFootView extends FrameLayout implements ILoadMoreFoot {
 
     private TextView mTvStatus;
-    private ProgressBar pbHead;
+    private ZLoadingView pbHead;
     private ImageView ivHead;
     private boolean p_d = false;
     private boolean p_d_b = false;
-    private boolean refreshBool = false;
     private LayoutParams mLayoutParams =
             new LayoutParams(LayoutParams.MATCH_PARENT, (int) DensityUtils.dipToPx(getContext(), 60));
     private int viewHeight;
@@ -52,7 +52,7 @@ public class DefaultFootView extends FrameLayout implements ILoadMoreFoot {
     private void initView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.default_headview, null);
         mTvStatus = (TextView) view.findViewById(R.id.tv_status);
-        pbHead = (ProgressBar) view.findViewById(R.id.pb_head);
+        pbHead = (ZLoadingView) view.findViewById(R.id.pb_head);
         ivHead = (ImageView) view.findViewById(R.id.iv_head);
         viewHeight = (int) DensityUtils.dipToPx(getContext(), 60);
         this.addView(view, mLayoutParams);
@@ -61,7 +61,6 @@ public class DefaultFootView extends FrameLayout implements ILoadMoreFoot {
     @Override
     public void onStart() {
         p_d = false;
-        refreshBool = false;
         Animation animation = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         animation.setDuration(0);
         animation.setFillAfter(true);
@@ -108,8 +107,7 @@ public class DefaultFootView extends FrameLayout implements ILoadMoreFoot {
 
     @Override
     public void onFingerUp(int distance) {
-        if (!refreshBool) {
-            refreshBool = true;
+        if (distance > viewHeight) {
             mTvStatus.setText("加载更多...");
             ivHead.setBackgroundColor(Color.parseColor("#00ffffff"));
             pbHead.setVisibility(VISIBLE);
